@@ -6,6 +6,9 @@ authors = ["cheeseborgers <goodcheeseburgers@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+twitchio = "^2.3.0"
+python-dotenv = "^0.20.0"
+
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"
