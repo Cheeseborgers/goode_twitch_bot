@@ -8,6 +8,9 @@ authors = ["cheeseborgers <goodcheeseburgers@gmail.com>"]
 python = "^3.10"
 twitchio = "^2.3.0"
 python-dotenv = "^0.20.0"
+dateutils = "^0.6.12"
+aiosqlite = "^0.17.0"
+aiofiles = "^0.8.0"
 
 
 [tool.poetry.dev-dependencies]

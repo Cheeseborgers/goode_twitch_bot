@@ -21,7 +21,7 @@ def get_bot_logger(name):
     file_handler = logging.FileHandler(os.environ.get("MAIN_LOG_FILENAME"))
 
     if os.environ.get("DEBUG"):
-        file_handler.setLevel(logging.DEBUG)
+        file_handler.setLevel(logging.INFO)
     else:
         file_handler.setLevel(logging.WARN)
 

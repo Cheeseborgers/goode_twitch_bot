@@ -1,0 +1,2 @@
+Set up per channel rate limiting
+Rethink Event channel checking basded on config
