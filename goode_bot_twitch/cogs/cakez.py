@@ -2,6 +2,7 @@
 Created 8/7/2022 by goode_cheeseburgers.
 """
 import datetime
+import typing
 
 from twitchio.ext import commands, routines
 
@@ -24,7 +25,9 @@ class Cakez(commands.Cog):
         """
         Increments and returns the times cakez77 has gotten angry on stream.
 
-        :param ctx:
+        Parameters
+        ------------
+        :param ctx: commands.Context
         :return: None
         """
         if await author_is_in_channels(ctx, ["cakez77", "goode_cheeseburgers"]):
@@ -49,6 +52,8 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
+    Parameters
+    ------------
     :param bot: The commands' bot instance.
     :return: None
     """
@@ -61,18 +66,22 @@ def breakdown() -> None:
     """
     Called when the module is getting unloaded.
 
-    :return:
+    Parameters
+    ------------
+    :return: None
     """
     clear_daily_counters.stop()
 
 
 @routines.routine(time=datetime.datetime(year=2022, month=7, day=1, hour=20, minute=44))
-async def clear_daily_counters(counters: dict):
+async def clear_daily_counters(counters: typing.Dict) -> None:
     """
     Clears the daily counters at a set time.
 
+    Parameters
+    ------------
     :param counters:
-    :return:
+    :return: None
     """
     if counters.get("today"):
         print("clearing mald counter")

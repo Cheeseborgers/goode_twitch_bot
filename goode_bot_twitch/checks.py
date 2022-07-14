@@ -2,7 +2,7 @@
 Created 8/7/2022 by goode_cheeseburgers.
 """
 import os
-from typing import Union
+import typing
 
 import twitchio
 from twitchio.ext import commands
@@ -30,7 +30,7 @@ async def author_is_sub(ctx: commands.Context) -> bool:
 
 async def author_is_owner(ctx: commands.Context) -> bool:
     """
-    Returns whether the context author is bot owner or not.
+    Returns whether the context author is bot owner_name or not.
     This is compared to the 'OWNER_ID' set in the bots .env file.
 
     :param ctx:
@@ -40,7 +40,7 @@ async def author_is_owner(ctx: commands.Context) -> bool:
 
 
 async def author_is_in_channels(
-    ctx: commands.Context, channels: Union[list, tuple]
+    ctx: commands.Context, channels: typing.Union[typing.List, typing.Tuple]
 ) -> bool:
     """
     Returns whether the context author is certain channel or not.
@@ -53,7 +53,8 @@ async def author_is_in_channels(
 
 
 async def event_is_in_channels(
-    channel_name: twitchio.Channel.name, channels: Union[list, tuple]
+    channel_name: twitchio.Channel.name,
+    channels: typing.Union[typing.List, typing.Tuple],
 ) -> bool:
     """
     Returns whether an event originated in the listed channels.

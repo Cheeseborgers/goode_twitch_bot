@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def get_bot_logger(name):
+def get_logger(name):
     """
     Returns the instance of the logger.
 
