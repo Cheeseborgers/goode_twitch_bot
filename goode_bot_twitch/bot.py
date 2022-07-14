@@ -2,11 +2,10 @@
 Created 7/7/2022 by goode_cheeseburgers.
 """
 import asyncio
-import json
 import os
-from typing import List, Union, Tuple
+import typing
+from json import JSONDecodeError
 
-import aiofiles
 import twitchio
 from twitchio.ext import commands, routines
 
@@ -14,8 +13,8 @@ from goode_bot_twitch.checks import event_is_in_channels
 from goode_bot_twitch.cogs.utils.thankyou_message import (
     create_raw_thank_you_message,
 )
-from goode_bot_twitch.database import Database
-from goode_bot_twitch.logging_handler import get_bot_logger
+from goode_bot_twitch.logging_handler import get_logger
+from goode_bot_twitch.utils import load_json
 
 
 class Bot(commands.Bot):
@@ -25,25 +24,25 @@ class Bot(commands.Bot):
 
     def __init__(self):
 
-        self.database = Database()
+        self.logger = get_logger(__name__)
+        self.owner_name = os.environ.get("OWNER_NAME")
+        self.rate_limits = {}
+        self.channels = {}
 
         super().__init__(
             token=os.environ.get("OAUTH_TOKEN"),
-            prefix=os.environ.get("PREFIX"),
-            initial_channels=[os.environ.get("OWNER_NAME")],
+            prefix=self.get_bot_prefixes(),
+            initial_channels=[self.owner_name],
             loop=asyncio.get_event_loop(),
         )
 
-        self.logger = get_bot_logger(__name__)
-
-        self.rate_limits = {}  # Sort this to handle all channels
-        self.char_limit = 500  # limits the character posted to twitch
-        self.channels = {}
-
-    def load_modules(self):
+    def load_modules(self) -> None:
         """
+        Loads the Initial cogs/ extensions.
 
-        :return:
+        Parameters
+        ------------
+        :return: None
         """
         initial_extensions = [
             "cogs.admin",
@@ -67,26 +66,46 @@ class Bot(commands.Bot):
         else:
             self.logger.debug("Loaded the following cogs: %s", [*self.cogs])
 
+    async def add_channels_to_channel_cache(self) -> None:
+        """
+        Adds all channels from the channels.json file to the channels' dict cache.
+
+        Parameters
+        ------------
+        :return: None
+        """
+        channels_filepath = "./json_resources/channels.json"
+
+        try:
+            # Load the existing channel data from file.
+            self.channels = await load_json(filepath=channels_filepath)
+
+            if not self.channels.get(self.owner_name):
+                self.logger.error("Owner channel not found in channels.json")
+
+        except FileNotFoundError:
+            self.logger.error("Json file not found at: %s", channels_filepath)
+        except JSONDecodeError:
+            self.logger.error(
+                "Malformed json file. please check: %s", channels_filepath
+            )
+
     async def join_initial_channels(self) -> None:
         """
+        Joins initial channels on starting the bot.
 
         Parameters
         ------------
         :return: None
         """
 
-        # Use the resource thingy here!
-        async with aiofiles.open("channels.json", mode="r", encoding="UTF-8") as file:
-            channels = await file.read()
-
-        self.channels = json.loads(channels)
-
         initial_channels = []
+        for channel_name, channel_metadata in self.channels.items():
+            if channel_name != self.owner_name:
+                if channel_metadata.get("auto_join"):
+                    initial_channels.append(channel_name)
 
-        for channel, channel_metadata in self.channels.items():
-            if channel_metadata.get("auto_join"):
-                initial_channels.append(channel)
-
+        # Join the list of channels
         await self.join_channels(channels=initial_channels)
 
     async def event_ready(self) -> None:
@@ -97,16 +116,22 @@ class Bot(commands.Bot):
         ------------
         :return: None
         """
+
+        await self.add_channels_to_channel_cache()
         await self.join_initial_channels()
 
         self.logger.info("Logged in as %s", self.nick)
         self.logger.info("User id is %s", self.user_id)
 
+        # disable linting on this as it's a twitchio routine, and we have
+        # no control of this other than its functionality.
         # pylint: disable=no-member
         self.clear_rate_limits.start()
 
-        owner_channel: twitchio.Channel = self.get_channel(os.environ.get("OWNER_NAME"))
-        await owner_channel.send(os.environ.get("LOGIN_MESSAGE"))
+        # Send bot login message to the bot owners channel?
+        if os.environ.get("SEND_LOGIN_MESSAGE"):
+            owner_channel: twitchio.Channel = self.get_channel(self.owner_name)
+            await owner_channel.send(os.environ.get("LOGIN_MESSAGE"))
 
     async def event_channel_joined(self, channel: twitchio.Channel) -> None:
         """
@@ -129,17 +154,30 @@ class Bot(commands.Bot):
         :param message (Message) – Message object containing relevant information.
         :return: None
         """
-        if message.echo:  # Ignores any 'echoed' messages and processes commands.
+        if message.echo:  # Ignore any 'echoed' messages.
             return
 
-        await self.get_prefixes()  # <- fix this trash
-
+        # Check this channel is in the channel cache
         if message.channel.name in self.channels:
-            channel_prefix = self.channels[message.channel.name].get("prefix", None)
-            if message.content.startswith((channel_prefix,)):
-                print(channel_prefix)
+            # Check this channel has commands enabled or is rather the owner_name, streamer or mod
+            if (
+                self.channels[message.channel.name].get("cmds_enabled_users", False)
+                or message.author.name == self.owner_name
+                or message.author.is_broadcaster
+                or message.author.is_mod
+            ):
 
-        await self.handle_commands(message)
+                # Get the channels prefix if any
+                channel_prefix = self.channels[message.channel.name].get("prefix", None)
+
+                # If we have a prefix, check if the message contents starts with the
+                # channels prefix.
+                if channel_prefix:
+                    if message.content.startswith(channel_prefix):
+                        # Handle the command.
+                        await self.handle_commands(message)
+                else:
+                    self.logger.info("s% has no prefix", message.channel)
 
     async def event_raw_data(self, data: str) -> None:
         """
@@ -153,8 +191,9 @@ class Bot(commands.Bot):
         # self.logger.debug("Twitch message: %s", data)
         return
 
-    async def event_raw_usernotice(self, channel: twitchio.Channel, tags: dict) -> None:
-
+    async def event_raw_usernotice(
+        self, channel: twitchio.Channel, tags: typing.Dict
+    ) -> None:
         """
         Event called when a USERNOTICE is received from Twitch.
 
@@ -176,13 +215,14 @@ class Bot(commands.Bot):
             else:
                 self.logger.debug("Not subbed to channel: %s", channel.name)
 
-    async def get_prefixes(self):
+    def get_bot_prefixes(self) -> list:
         """
         All callable Prefixes for our bot.
+        NOTE: This can change as channels are added/ removed.
 
         Parameters
         ------------
-        :return: str:
+        :return: list:
         """
         prefixes = [os.environ.get("PREFIX")]
 
@@ -193,7 +233,9 @@ class Bot(commands.Bot):
 
         return prefixes
 
-    async def leave_channels(self, channels: Union[List[str], Tuple[str]]) -> None:
+    async def leave_channels(
+        self, channels: typing.Union[typing.List[str], typing.Tuple[str]]
+    ) -> None:
         """
         Removes any rate limits and parts bot from the listed channels.
 
