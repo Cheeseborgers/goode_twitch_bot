@@ -1,27 +1,11 @@
 """
 Created 8/7/2022 by goode_cheeseburgers.
 """
-import asyncio
 
+import json
+
+import aiofiles
 import aiohttp
-
-
-def initdb():
-    """
-    Command line function to initialize the database
-
-    :returns: None
-    """
-    asyncio.get_event_loop().run_until_complete(_initdb())
-
-
-async def _initdb():
-    """
-    Create an empty database, Adds the admin user
-
-    :return: None
-    """
-    print("Database initialized")
 
 
 async def make_request(url, params=None) -> dict:
@@ -43,3 +27,30 @@ async def make_request(url, params=None) -> dict:
                 data = None
 
         return data
+
+
+async def load_json(filepath: str) -> dict:
+    """
+    Loads json from a file a returns the data as a python dictionary.
+
+    :param filepath: The filepath to the json file.
+    :return:
+    """
+    async with aiofiles.open(filepath, mode="r", encoding="utf-8") as file:
+        contents = await file.read()
+        return json.loads(contents)
+
+
+async def write_json(filepath: str, data: dict):
+    """
+    Writes json from a dict to a file.
+
+    :param filepath:
+    :param data:
+    :return:
+    """
+    async with aiofiles.open(filepath, mode="w", encoding="utf-8") as file:
+        await file.write(json.dumps(data, indent=3))
+
+
+# async def create_file_if_not_exist(filepath: str, data: dict):
