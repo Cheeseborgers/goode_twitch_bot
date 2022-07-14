@@ -12,24 +12,28 @@ class Math(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    async def add(self, ctx: commands.Context, left: int, right: int) -> None:
+    @commands.command(name="_add", aliases=("add",))
+    async def _add(self, ctx: commands.Context, left: int, right: int) -> None:
         """
         Adds two numbers
 
-        :param ctx:
-        :param left:
-        :param right:
-        :return:
+        Parameters
+        ------------
+        :param ctx: commands.Context
+        :param left: The first number to add.
+        :param right: The second number to add.
+        :return: None
         """
         await ctx.send(left + right)
 
     @commands.command(name="_pi", aliases=("pi",))
     async def _pi(self, ctx: commands.Context) -> None:
         """
-        Returns the value of pi to 499 digits if mod, 3 if not
+        Returns the value of pi to 499 digits if mod, 3 if not.
 
-        :param ctx:
+        Parameters
+        ------------
+        :param ctx: commands.Context
         :return: None
         """
         if ctx.message.author.is_mod:
@@ -51,6 +55,8 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
+    Parameters
+    ------------
     :param bot: The commands' bot instance.
     :return: None
     """
@@ -61,5 +67,7 @@ def breakdown() -> None:
     """
     Called when the module is getting unloaded.
 
-    :return:
+    Parameters
+    ------------
+    :return: None
     """

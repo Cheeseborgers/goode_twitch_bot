@@ -8,7 +8,7 @@ from goode_bot_twitch.checks import author_is_owner
 
 class AdminCommandsCog(commands.Cog):
     """
-    A Cog Containing all bot owner/ admin commands
+    A Cog Containing all bot owner_name/ admin commands
     """
 
     def __init__(self, bot):
@@ -16,11 +16,13 @@ class AdminCommandsCog(commands.Cog):
 
     async def cog_check(self, ctx: commands.Context) -> bool:
         """
-        A Cog wide check to determine if the context author is the bot owner
+        A Cog wide check to determine if the context author is the bot owner_name
         before running any commands.
 
+        Parameters
+        ------------
         :param ctx: commands.Context
-        :return: bool: Whether the author is the bot owner or not.
+        :return: bool: Whether the author is the bot owner_name or not.
         """
         return await author_is_owner(ctx)
 
@@ -29,7 +31,9 @@ class AdminCommandsCog(commands.Cog):
         """
         Joins a channel/ stream by channel name.
 
-        :param ctx:
+        Parameters
+        ------------
+        :param ctx: commands.Context
         :param channel_name: The name of the channel to join.
         :return: None
         """
@@ -40,7 +44,9 @@ class AdminCommandsCog(commands.Cog):
         """
         Leaves a channel/ stream by channel name.
 
-        :param ctx:
+        Parameters
+        ------------
+        :param ctx: commands.Context
         :param channel_name: The name of the channel to leave.
         :return: None
         """
@@ -51,7 +57,9 @@ class AdminCommandsCog(commands.Cog):
         """
         Unloads a module and it's cogs.
 
-        :param ctx:
+        Parameters
+        ------------
+        :param ctx: commands.Context
         :param module: The name of the module to unload in dot.path format.
         :return: None
         """
@@ -68,7 +76,9 @@ class AdminCommandsCog(commands.Cog):
         """
         Loads a module and it's cogs.
 
-        :param ctx:
+        Parameters
+        ------------
+        :param ctx: commands.Context
         :param module: The name of the module to unload in dot.path format.
         :return: None
         """
@@ -88,7 +98,9 @@ class AdminCommandsCog(commands.Cog):
         """
         Reloads a module and it's cogs.
 
-        :param ctx:
+        Parameters
+        ------------
+        :param ctx: commands.Context
         :param module: The name of the module to unload in dot.path format.
         :return: None
         """
@@ -100,6 +112,13 @@ class AdminCommandsCog(commands.Cog):
             self.bot.logger.error("'%s' is not loaded: %s", module, error)
         else:
             await ctx.send(f"'{module}' reloaded")
+
+    async def add_channel(self) -> None:
+        """
+        Adds a channel to the ....
+
+        :return None:
+        """
 
 
 def prepare(bot: commands.Bot) -> None:

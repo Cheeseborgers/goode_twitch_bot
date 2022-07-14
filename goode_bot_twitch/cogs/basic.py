@@ -20,6 +20,8 @@ class Basic(commands.Cog):
         """
         Simply responds back to the sender with hello message.
 
+        Parameters
+        ------------
         :param ctx: commands.Context
         :return: None
         """
@@ -28,10 +30,12 @@ class Basic(commands.Cog):
     @commands.command(name="_rate", aliases=("rate",))
     async def _rate(self, ctx: commands.Context, name: str = None):
         """
-        Rates A user by name out of 10, if no name is present the sender is rated.
+        Rates A user by name out of 10.
 
+        Parameters
+        ------------
         :param ctx: commands.Context
-        :param name:
+        :param name: The users name to rate (If None, the ctx authors name is used)
         :return: None
         """
         if not name:
@@ -46,6 +50,8 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
+    Parameters
+    ------------
     :param bot: The commands' bot instance.
     :return: None
     """
@@ -56,5 +62,7 @@ def breakdown() -> None:
     """
     Called when the module is getting unloaded.
 
+    Parameters
+    ------------
     :return:
     """

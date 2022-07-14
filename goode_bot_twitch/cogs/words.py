@@ -65,7 +65,7 @@ class Words(commands.Cog):
         definition = data["list"][0]
         message = textwrap.shorten(
             f"{definition['word']}: {definition['definition']}",
-            width=self.bot.char_limit - len(definition["permalink"]) - 1,
+            width=500 - len(definition["permalink"]) - 1,
             placeholder="...",
         )
 

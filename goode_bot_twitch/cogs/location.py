@@ -18,6 +18,8 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
+    Parameters
+    ------------
     :param bot: The commands' bot instance.
     :return: None
     """
@@ -28,5 +30,7 @@ def breakdown() -> None:
     """
     Called when the module is getting unloaded.
 
-    :return:
+    Parameters
+    ------------
+    :return: None
     """

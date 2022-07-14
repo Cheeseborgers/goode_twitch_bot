@@ -68,8 +68,8 @@ class ModCommandsCog(commands.Cog):
     async def _getid(self, ctx, username: str = None):
         """
 
-        :param ctx:
-        :param user:
+        :param ctx: commands.Context
+        :param username:
         :return:
         """
 
