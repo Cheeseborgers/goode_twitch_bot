@@ -3,6 +3,8 @@ Created 8/7/2022 by goode_cheeseburgers.
 """
 import datetime
 
+import pytz
+
 import dateutil.easter
 from twitchio.ext import commands
 
@@ -56,6 +58,21 @@ class Time(commands.Cog):
         now = datetime.datetime.utcnow()
         newyear = datetime.datetime(now.year, 1, 1).replace(year=now.year + 1)
         await ctx.send(f"{(newyear - now).days + 1} days until new years day!")
+
+    @commands.command(name="_time", aliases=("time",))
+    async def _time(self, ctx):
+        """
+        Returns the current time for the streamer/ channel
+
+        """
+
+        timezone = pytz.timezone(self.bot.channels.cache[ctx.channel.name].timezone)
+        print(timezone)
+
+        now = datetime.datetime.now(timezone)
+        await ctx.send(
+            f"It's {now.strftime((('%Y-%m-%d %H:%M:%S.%f')[: -3]))} for {ctx.channel.name}"
+        )
 
 
 def prepare(bot: commands.Bot) -> None:

@@ -1,10 +1,40 @@
 """This module handles all logging throughout the application"""
 import logging
+import logging.handlers
 import os
+from copy import copy
 
 from dotenv import load_dotenv
 
 load_dotenv()
+
+MAPPING = {
+    "DEBUG": 37,  # white
+    "INFO": 36,  # cyan
+    "WARNING": 33,  # yellow
+    "ERROR": 31,  # red
+    "CRITICAL": 41,  # white on red bg
+}
+
+PREFIX = "\033["
+SUFFIX = "\033[0m"
+
+
+class ColoredFormatter(logging.Formatter):
+    """
+    Coloured Logging formatter.
+    """
+
+    def __init__(self, pattern):
+        logging.Formatter.__init__(self, pattern)
+
+    def format(self, record):
+        colored_record = copy(record)
+        levelname = colored_record.levelname
+        seq = MAPPING.get(levelname, 37)  # default white
+        colored_levelname = f"{PREFIX}{seq}m{levelname}{SUFFIX}"
+        colored_record.levelname = colored_levelname
+        return logging.Formatter.format(self, colored_record)
 
 
 def get_logger(name):
@@ -15,13 +45,18 @@ def get_logger(name):
     :return: The logger instance
     """
     file_formatter = logging.Formatter(os.environ.get("FILE_LOG_FORMAT"))
-    console_formatter = logging.Formatter(os.environ.get("CONSOLE_LOG_FORMAT"))
+    console_formatter = ColoredFormatter(os.environ.get("CONSOLE_LOG_FORMAT"))
 
-    # File handler -------------------------------------------------------------
-    file_handler = logging.FileHandler(os.environ.get("MAIN_LOG_FILENAME"))
+    # File handler - https://docs.python.org/3/howto/logging.html -------------
+    file_handler = logging.handlers.RotatingFileHandler(
+        filename=os.environ.get("MAIN_LOG_FILENAME"),
+        encoding="utf-8",
+        maxBytes=32 * 1024 * 1024,  # 32 MiB
+        backupCount=5,  # Rotate through 5 files
+    )
 
     if os.environ.get("DEBUG"):
-        file_handler.setLevel(logging.INFO)
+        file_handler.setLevel(logging.DEBUG)
     else:
         file_handler.setLevel(logging.WARN)
 

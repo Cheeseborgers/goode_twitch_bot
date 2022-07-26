@@ -1,6 +1,7 @@
 """
 Created 8/7/2022 by goode_cheeseburgers.
 """
+import os
 import textwrap
 
 from twitchio.ext import commands
@@ -36,7 +37,7 @@ class Words(commands.Cog):
             "maxDictionaryCount": -1,
             "minLength": 5,
             "maxLength": -1,
-            "api_key": self.bot.WORDNIK_API_KEY,
+            "api_key": os.environ.get("WORKNIK_API_KEY"),
         }
 
         data = await make_request(url, params)

@@ -30,7 +30,7 @@ async def author_is_sub(ctx: commands.Context) -> bool:
 
 async def author_is_owner(ctx: commands.Context) -> bool:
     """
-    Returns whether the context author is bot owner_name or not.
+    Returns whether the context author is bot owner_channel_name or not.
     This is compared to the 'OWNER_ID' set in the bots .env file.
 
     :param ctx:

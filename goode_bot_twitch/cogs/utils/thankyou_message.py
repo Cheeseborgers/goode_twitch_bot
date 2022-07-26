@@ -1,7 +1,6 @@
 """
 Created 8/7/2022 by goode_cheeseburgers.
 """
-from asyncio import sleep
 from random import randint, choice
 
 import twitchio
@@ -25,7 +24,7 @@ def get_author_prefix(self, message: twitchio.Message) -> str:
     elif message.tags["room-id"] == message.author.id:
         user_prefix = "[Streamer]"
     elif message.author.name.lower() == self.bot.nick.lower():
-        user_prefix = "[Bot]"
+        user_prefix = "[TwitchBot]"
     return user_prefix
 
 
@@ -54,7 +53,7 @@ def generate_emotes(emote_list) -> str:
     return " ".join([choice(emote_list) for _ in range(randint(10, 20))])
 
 
-async def create_raw_thank_you_message(bot, channel_name: str, tags: dict):
+async def create_thank_you_message(bot, channel_name: str, tags: dict) -> str:
     """
     Creates a thankyou message for subs and gift subs.
 
@@ -64,92 +63,40 @@ async def create_raw_thank_you_message(bot, channel_name: str, tags: dict):
     :return:
     """
 
-    bot.logger.debug("%s <--- type", tags["msg-id"])
+    # Sub gift bomb
+    if tags["msg-id"] == "submysterygift":
 
-    if tags["msg-id"] == "submysterygift" or tags["msg-id"] == "subgift":
+        bot.logger.debug(
+            "[Gift-Sub] - Gifter: %s ----- Quantity: %s",
+            tags["display-name"],
+            tags["msg-param-mass-gift-count"],
+        )
 
-        if bot.rate_limits.get(channel_name) > 5:
-            bot.logger.debug("Rate limit exceeded!!")
-            return
+        end_emote = " " + bot.channels.cache[channel_name].subgift_thanks_end_emote
 
-        # Increase the rate_limit by 1
-        bot.rate_limits[channel_name] = bot.rate_limits.get(channel_name) + 1
+        thank_you_msg = (
+            f"GG {bot.channels.cache[channel_name].subgift_thanks_start_emote} "
+            f'@{tags["login"]} {randint(10, 20) * end_emote}'
+        )
 
-        # Sleep for a random time to prevent immediate sending of the message
-        await sleep(randint(9, 16))
+        return thank_you_msg
 
-        # Sub gift bomb
-        if tags["msg-id"] == "submysterygift":
+    # Handle and an individual gift sub
+    if tags["msg-id"] == "subgift":
 
-            print(
-                f'Gifter\'s name is: {tags["display-name"]} :--- Quantity: '
-                f'{tags["msg-param-mass-gift-count"]}'
-            )
+        bot.logger.debug(
+            "[Gift-Sub] - Gifted Subscriber: %s", tags["msg-param-recipient-user-name"]
+        )
 
-            if channel_name == "cakez77":
-                thank_you_msg = (
-                    f'GG cakezRub @{tags["login"]} {randint(10, 20) * " cakezRub2"}'
-                )
-                bot.logger.debug("Thankyou msg sent: %s", thank_you_msg)
-                return thank_you_msg
+        thank_you_msg = generate_emotes(bot.channels.cache[channel_name].thanks_emotes)
 
-            if channel_name == "jonbams":
-                thank_you_msg = (
-                    f'GG bamOML @{tags["login"]} {randint(10, 20) * " bamHeart"}'
-                )
+        return thank_you_msg
 
-                bot.logger.debug("Thankyou msg sent: %s", thank_you_msg)
+    if tags["msg-id"] == "resub" or tags["msg-id"] == "sub":
+        bot.logger.debug(
+            "[%s] - Subscriber: %s", tags["msg-id"].capitalize(), tags["display-name"]
+        )
 
-                return thank_you_msg
+        thank_you_msg = generate_emotes(bot.channels.cache[channel_name].thanks_emotes)
 
-        # Handle and an individual gift sub
-        if tags["msg-id"] == "subgift":
-
-            print(f'Gifted persons  name is: {tags["msg-param-recipient-user-name"]}')
-
-            thank_you_msg = generate_emotes(bot.channels[channel_name]["thanks_emotes"])
-
-            bot.logger.debug("Thankyou msg sent: %s", thank_you_msg)
-
-            return thank_you_msg
-
-
-async def create_thank_you_message(bot, subscription_data: dict):
-    """
-    May get rid of this after testing.
-
-    :param bot:
-    :param subscription_data:
-    :return:
-    """
-
-    channel_name = subscription_data["channel"].name
-
-    # Increase the rate_limit by 1
-    if bot.rate_limits.get(channel_name) > 5:
-        bot.logger.debug("Rate limit exceeded!!")
-        return
-
-    bot.rate_limits[channel_name] = bot.rate_limits.get(channel_name) + 1
-
-    # Add streak months to sub data tags if not present (set to 0)
-    if "msg-param-streak-months" not in subscription_data["tags"].keys():
-        subscription_data["tags"]["msg-param-streak-months"] = "0"
-
-    sub_data = {
-        "channel": channel_name,
-        "user": subscription_data["user"].name,
-        "display_name": subscription_data["tags"]["display-name"],
-        "months": subscription_data["tags"]["msg-param-cumulative-months"],
-        "streak_months": subscription_data["tags"]["msg-param-streak-months"],
-        "tier": get_sub_tier(subscription_data["sub_plan"]),
-        "gifted": get_sub_tier(subscription_data["sub_plan"]),
-    }
-
-    await sleep(randint(9, 16))
-
-    thank_you_msg = generate_emotes(bot.channels[channel_name]["thanks_emotes"])
-
-    print(f'{sub_data["display_name"]=} : {sub_data["channel"]=} : ({thank_you_msg=})')
-
-    return thank_you_msg
+        return thank_you_msg

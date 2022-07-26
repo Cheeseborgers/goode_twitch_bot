@@ -8,7 +8,7 @@ import aiohttp
 import dateutil.parser
 from twitchio.ext import commands
 
-from goode_bot_twitch.cogs.utils.units.time import duration_to_string
+from utilities.time import duration_to_string
 
 
 class Twitch(commands.Cog):
@@ -47,7 +47,7 @@ class Twitch(commands.Cog):
                 print(await resp.json())
                 if resp.status == 200:
                     data = await resp.json()
-                    stream = data.get("stream")
+                    stream = data.cache("stream")
                     if not stream:
                         return await ctx.send("Average FPS not found.")
                     await ctx.send(f"Average FPS: {stream['average_fps']}")
@@ -127,7 +127,7 @@ class Twitch(commands.Cog):
         streamer = await ctx.channel.user()
         stream = await self.bot.fetch_streams(user_ids=[streamer.id])
 
-        if not stream or not stream.get("title"):
+        if not stream or not stream.cache("title"):
             return await ctx.send("Title not found.")
 
         await ctx.send(stream["title"])

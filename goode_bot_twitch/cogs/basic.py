@@ -6,6 +6,7 @@ import random
 from twitchio.ext import commands
 
 
+# ADDSTUFF add !lurk, !unlurk commands
 class Basic(commands.Cog):
     """
     A Cog containing basic commands.

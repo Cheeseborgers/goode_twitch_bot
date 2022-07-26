@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Channels{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1>All Channels</h1>
+        <table class="u-max-full-width">
+            <thead>
+                <tr>
+                    <th>Channel name</th>
+                    <th>Prefix</th>
+                    <th>Commands enabled</th>
+                    <th>Auto join</th>
+                    <th>Auto thank</th>
+                    <th>Thanks emotes</th>
+                    <th>Subgift thanks start emote</th>
+                    <th>Subgift thanks end emote</th>
+                    <th>TimeZone</th>
+                    <th>Next check</th>
+                    <th>Live</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for channel_data in channels.values() %}
+                    <tr>
+                        {% for value in channel_data.values() %}
+                            <td>{{ value|e }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

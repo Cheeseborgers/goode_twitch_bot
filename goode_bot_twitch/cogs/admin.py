@@ -8,7 +8,7 @@ from goode_bot_twitch.checks import author_is_owner
 
 class AdminCommandsCog(commands.Cog):
     """
-    A Cog Containing all bot owner_name/ admin commands
+    A Cog Containing all bot owner_channel_name/ admin commands
     """
 
     def __init__(self, bot):
@@ -16,13 +16,13 @@ class AdminCommandsCog(commands.Cog):
 
     async def cog_check(self, ctx: commands.Context) -> bool:
         """
-        A Cog wide check to determine if the context author is the bot owner_name
+        A Cog wide check to determine if the context author is the bot owner_channel_name
         before running any commands.
 
         Parameters
         ------------
         :param ctx: commands.Context
-        :return: bool: Whether the author is the bot owner_name or not.
+        :return: bool: Whether the author is the bot owner_channel_name or not.
         """
         return await author_is_owner(ctx)
 
@@ -113,9 +113,13 @@ class AdminCommandsCog(commands.Cog):
         else:
             await ctx.send(f"'{module}' reloaded")
 
-    async def add_channel(self) -> None:
+    async def add_channel(
+        self,
+        channel_name: str,
+        prefix=None,
+    ) -> None:
         """
-        Adds a channel to the ....
+        Adds a channel to the database and cache.
 
         :return None:
         """

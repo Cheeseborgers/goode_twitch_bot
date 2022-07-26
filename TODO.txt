@@ -1,2 +1,5 @@
-Set up per channel rate limiting
-Rethink Event channel checking basded on config
+ # TODO update with a time delta if sub? or rethink this (from raw events) (bot)
+ # TODO check has follow emotes? (bot)
+ # TODO check this channel takes auto thanks. (bot)
+ # TODO move this lot into own routine of 5 minutes? (post socials)
+ # TODO reset / fix the time on this (clear recurrent counters (bot)

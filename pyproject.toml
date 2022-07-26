@@ -6,11 +6,17 @@ authors = ["cheeseborgers <goodcheeseburgers@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-twitchio = "^2.3.0"
+twitchio = {extras = ["soundext"], version = "^2.3.0"}
 python-dotenv = "^0.20.0"
 dateutils = "^0.6.12"
 aiosqlite = "^0.17.0"
 aiofiles = "^0.8.0"
+quart = "^0.17.0"
+aioredis = "^2.0.1"
+quart-auth = "^0.6.0"
+SQLAlchemy = "^1.4.39"
+asyncpg = "^0.26.0"
+uuid = "^1.30"
 
 
 [tool.poetry.dev-dependencies]

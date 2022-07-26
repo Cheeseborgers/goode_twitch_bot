@@ -1,10 +1,7 @@
 """
 Created 8/7/2022 by goode_cheeseburgers.
 """
-import datetime
-import typing
-
-from twitchio.ext import commands, routines
+from twitchio.ext import commands
 
 from goode_bot_twitch.checks import author_is_in_channels
 from goode_bot_twitch.cogs.utils.command_decorators import is_owner
@@ -17,7 +14,6 @@ class Cakez(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.malding_counters = {"today": 0, "all_time": 0}
 
     @commands.command(name="_malding", aliases=["malding"])
     @is_owner
@@ -31,11 +27,26 @@ class Cakez(commands.Cog):
         :return: None
         """
         if await author_is_in_channels(ctx, ["cakez77", "goode_cheeseburgers"]):
-            _today_count: int = self.malding_counters.get("today", 0) + 1
-            _all_time_count: int = self.malding_counters.get("all_time", 0) + 1
 
-            self.malding_counters["today"] = _today_count
-            self.malding_counters["all_time"] = _all_time_count
+            print(self.bot.recurrent_counters)
+
+            _today_count: int = (
+                self.bot.recurrent_counters.cache("cakez77")
+                .cache("malding")
+                .cache("today", 0)
+                + 1
+            )
+            _all_time_count: int = (
+                self.bot.recurrent_counters.cache("cakez77")
+                .cache("malding")
+                .cache("all_time", 0)
+                + 1
+            )
+
+            self.bot.recurrent_counters["cakez77"]["malding"]["today"] = _today_count
+            self.bot.recurrent_counters["cakez77"]["malding"][
+                "all_time"
+            ] = _all_time_count
 
             msg = (
                 f"@cakez77 has malded {_today_count} times today. ({_all_time_count} "
@@ -46,6 +57,16 @@ class Cakez(commands.Cog):
                 await ctx.send(f"{msg} cakez7Rg")
             else:
                 await ctx.send(msg)
+
+    def init_counters(self):
+        """
+        Initializes all counters for this cog
+        :return:
+        """
+        self.bot.recurrent_counters["cakez77"] = {}
+        self.bot.recurrent_counters["cakez77"]["malding"] = {"today": 0, "all_time": 0}
+
+        print(self.bot.recurrent_counters)
 
 
 def prepare(bot: commands.Bot) -> None:
@@ -58,7 +79,7 @@ def prepare(bot: commands.Bot) -> None:
     :return: None
     """
     cog = Cakez(bot)
-    clear_daily_counters.start(cog.malding_counters)
+    # cog.init_counters()
     bot.add_cog(cog)
 
 
@@ -70,19 +91,3 @@ def breakdown() -> None:
     ------------
     :return: None
     """
-    clear_daily_counters.stop()
-
-
-@routines.routine(time=datetime.datetime(year=2022, month=7, day=1, hour=20, minute=44))
-async def clear_daily_counters(counters: typing.Dict) -> None:
-    """
-    Clears the daily counters at a set time.
-
-    Parameters
-    ------------
-    :param counters:
-    :return: None
-    """
-    if counters.get("today"):
-        print("clearing mald counter")
-        counters["today"] = 0

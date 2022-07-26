@@ -3,79 +3,63 @@ Created 12/7/2022 by goode_cheeseburgers.
 """
 import os
 
-import aiosqlite
+import sqlalchemy
 from dotenv import load_dotenv
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
+
+from goode_bot_twitch.logging_handler import get_logger
+from goode_bot_twitch.models.abstract_base import AbstractBase
 
 load_dotenv()
 
+logger = get_logger(__name__)
 
-async def fetchall(query: str) -> tuple:
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+# An async SQLAlchemy Engine that will interact with a PostgreSQL database.
+if os.environ.get("DEBUG"):
+    logger.debug("Starting database engine...")
+    logger.debug("Sqlalchemy version: %s", sqlalchemy.__version__)
+    engine = create_async_engine(DATABASE_URL, echo=True)
+else:
+    engine = create_async_engine(DATABASE_URL)
+
+# An async SQLAlchemy ORM session factory bound to the above engine.
+async_session: sessionmaker = sessionmaker(
+    engine, class_=AsyncSession, expire_on_commit=False
+)
+
+
+async def drop_models() -> None:
     """
-    Fetch all remaining rows.
+    Drops all models from the database.
 
-    :param query: The sql query to execute.
-    :return: tuple:
-    """
-    async with aiosqlite.connect(
-        database=os.environ.get("DATABASE_PATH")
-    ) as connection:
-        async with connection.execute(query) as cursor:
-            rows = await cursor.fetchall()
-            return rows
-
-
-async def fetchone(query: str) -> tuple:
-    """
-    Fetch a single row.
-
-    :param query: The sql query to execute.
-    :return: tuple: The row queried form the database
-    """
-    async with aiosqlite.connect(
-        database=os.environ.get("DATABASE_PATH")
-    ) as connection:
-        async with connection.execute(query) as cursor:
-            row = await cursor.fetchone()
-            return row
-
-
-async def execute(query: str) -> None:
-    """
-    Execute the given query.
-
-    :param query: The sql query to execute.
     :return: None
     """
-    async with aiosqlite.connect(
-        database=os.environ.get("DATABASE_PATH")
-    ) as connection:
-        await connection.execute(query)
-        await connection.commit()
+    async with engine.begin() as conn:
+        await conn.run_sync(AbstractBase.metadata.drop_all)
+        logger.debug("All models dropped.")
 
 
-async def execute_many(query: str) -> None:
+async def create_models() -> None:
     """
-    Execute the given query.
+    Creates all models in the database
 
-    :param query: The sql query to execute.
     :return: None
     """
-    async with aiosqlite.connect(
-        database=os.environ.get("DATABASE_PATH")
-    ) as connection:
-        await connection.execute(query)
-        await connection.commit()
+    async with engine.begin() as conn:
+        await conn.run_sync(AbstractBase.metadata.create_all)
+        logger.debug("All models created.")
 
-    # pylint: disable=pointless-string-statement
+
+async def init_models() -> None:
     """
-    async def execute_script(sql_script: str) -> None:
+    Drops all tables from the database and recreates them.
 
-        Execute a user script.
-
-        :param sql_script: sql_script must be a string
-        :return: None
-
-        async with aiosqlite.connect(database=os.environ.get("DATABASE_PATH")) as connection:
-            async with connection.executescript(sql_script):
-
-                await connection.commit() """
+    :return: None
+    """
+    await drop_models()
+    await create_models()
+    logger.debug("Database initialized.")
