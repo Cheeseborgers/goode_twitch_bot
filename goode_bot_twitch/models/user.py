@@ -42,12 +42,11 @@ class TwitchBotUser(AbstractBase):
         return self._str()
 
     def __init__(self, name, email, password_hash, roles):
+        super().__init__()
         self.name = name
         self.email = email
         self.password_hash = password_hash
         self.roles = roles
-
-        super().__init__()
 
 
 async def add_user(user: TwitchBotUser) -> None:
