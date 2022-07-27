@@ -83,7 +83,7 @@ class WebServer(quart.Quart):
     async def redirect_to_login(self, *_: Exception) -> ResponseReturnValue:
         """
 
-        :param _:
+        @param: _:
         :return:
         """
         return redirect(url_for("login"))

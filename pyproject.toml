@@ -6,7 +6,7 @@ authors = ["cheeseborgers <goodcheeseburgers@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-twitchio = {extras = ["soundext"], version = "^2.3.0"}
+twitchio = {extras = ["sounds"], version = "^2.3.0"}
 python-dotenv = "^0.20.0"
 dateutils = "^0.6.12"
 aiosqlite = "^0.17.0"
@@ -17,6 +17,7 @@ quart-auth = "^0.6.0"
 SQLAlchemy = "^1.4.39"
 asyncpg = "^0.26.0"
 uuid = "^1.30"
+argon2-cffi = "^21.3.0"
 
 
 [tool.poetry.dev-dependencies]

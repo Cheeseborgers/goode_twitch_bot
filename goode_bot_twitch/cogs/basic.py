@@ -6,7 +6,6 @@ import random
 from twitchio.ext import commands
 
 
-# ADDSTUFF add !lurk, !unlurk commands
 class Basic(commands.Cog):
     """
     A Cog containing basic commands.
@@ -23,7 +22,7 @@ class Basic(commands.Cog):
 
         Parameters
         ------------
-        :param ctx: commands.Context
+        @param: ctx: commands.Context
         :return: None
         """
         await ctx.send(f"Hello @{ctx.author.name}!")
@@ -35,8 +34,8 @@ class Basic(commands.Cog):
 
         Parameters
         ------------
-        :param ctx: commands.Context
-        :param name: The users name to rate (If None, the ctx authors name is used)
+        @param: ctx: commands.Context
+        @param: name: The users name to rate (If None, the ctx authors name is used)
         :return: None
         """
         if not name:
@@ -46,6 +45,32 @@ class Basic(commands.Cog):
             f"I rate @{name} a solid {str(random.randint(1, 10))}/10"
         )
 
+    @commands.command(name="_lurk", aliases=("lurk",))
+    async def _lurk(self, ctx: commands.Context):
+        """
+        Posts a message to chat that the author is leaving chat/ lurking.
+
+        Parameters
+        ------------
+        @param: ctx: commands.Context
+        :return: None
+        """
+
+        await ctx.channel.send(f"{ctx.author.name} is lurking")
+
+    @commands.command(name="_unlurk", aliases=("unlurk",))
+    async def _unlurk(self, ctx: commands.Context):
+        """
+        Posts a message to chat that the author is back in chat/ unlurking.
+
+        Parameters
+        ------------
+        @param: ctx: commands.Context
+        :return: None
+        """
+
+        await ctx.channel.send(f"{ctx.author.name} is back from lurking")
+
 
 def prepare(bot: commands.Bot) -> None:
     """
@@ -53,7 +78,7 @@ def prepare(bot: commands.Bot) -> None:
 
     Parameters
     ------------
-    :param bot: The commands' bot instance.
+    @param: bot: The commands' bot instance.
     :return: None
     """
     bot.add_cog(Basic(bot))

@@ -19,6 +19,7 @@ from goode_bot_twitch.cogs.utils.thankyou_message import (
     create_thank_you_message,
 )
 from goode_bot_twitch.errors import OwnerNotFound, ChannelNotFound
+from utilities.time import seconds_to_hms
 
 
 class TwitchBot(commands.Bot):
@@ -113,10 +114,14 @@ class TwitchBot(commands.Bot):
         # Load the Channel data from the database into the cache.
         try:
             await self.channels.load_cache()
+            # TESTING
+            # chan = TwitchChannel("test_channel", "?", False, False, False, [], "", "")
+            # await delete_channel(chan)
+
         except ChannelNotFound:
-            self.logger.error("No channels found in the database")
+            self.logger.error("No users found in the cache.")
         except OwnerNotFound:
-            self.logger.error("Owner not found in channel cache.")
+            self.logger.error("Owner not found in model cache.")
 
         # Create the recurrent and message counters.
         await self.create_channel_counters()
@@ -139,7 +144,7 @@ class TwitchBot(commands.Bot):
 
         Parameters
         ------------
-        :param channel: The channel the bot joined
+        @param: channel: The channel the bot joined
         :return: None
         """
         self.rate_limits[channel.name] = self.rate_limits.get(channel.name, 0)
@@ -154,7 +159,7 @@ class TwitchBot(commands.Bot):
 
         Parameters
         ------------
-        :param message (Message) – Message object containing relevant information.
+        @param: message (Message) – Message object containing relevant information.
         :return: None
         """
         if message.echo:  # Ignore any 'echoed' messages.
@@ -195,7 +200,7 @@ class TwitchBot(commands.Bot):
 
         Parameters
         ------------
-        :param data: The raw data received from Twitch.
+        @param: data: The raw data received from Twitch.
         :return: None
         """
         # self.logger.debug("Twitch message: %s", data)
@@ -209,8 +214,8 @@ class TwitchBot(commands.Bot):
 
         Parameters
         ------------
-        :param channel: The TwitchIO Channel object
-        :param tags: A dict of tags associated with the event
+        @param: channel: The TwitchIO Channel object
+        @param: tags: A dict of tags associated with the event
         :return: None
         """
 
@@ -258,7 +263,7 @@ class TwitchBot(commands.Bot):
                     else:
                         self.logger.debug("Thankyou message creation error.")
                 else:
-                    self.logger.debug("Not subbed to channel: %s", channel.name)
+                    self.logger.debug("Not subbed to model: %s", channel.name)
 
             elif tags["msg-id"] == "bitsbadgetier":
                 self.logger.debug(
@@ -307,11 +312,11 @@ class TwitchBot(commands.Bot):
 
         Parameters
         ------------
-        :param channels: A List or Tuple of channels to leave by channel name.
+        @param: channels: A List or Tuple of channels to leave by channel name.
         :return: None
         """
         for channel_name in channels:
-            self.logger("Leaving channel %s and deleting it's rate_limits")
+            self.logger("Leaving model %s and deleting it's rate_limits")
             self.rate_limits.pop(self.rate_limits.get(channel_name))
 
         await self.part_channels(channels=channels)
@@ -322,7 +327,7 @@ class TwitchBot(commands.Bot):
 
         Parameters
         ------------
-        :param channel: The channel to check.
+        @param: channel: The channel to check.
         :return: True if subscribed, False if not.
         """
         user = channel.get_chatter(name=self.owner_channel_name)
@@ -340,8 +345,8 @@ class TwitchBot(commands.Bot):
 
 
         -----------
-        :param: channels: A list of channel names to check.
-        :return: list: A list of live channels
+        @param: users: A list of channel names to check.
+        :return: list: A list of live channel
         """
 
         # Split the list into lists of channel names, max 99 per list.
@@ -430,11 +435,11 @@ class TwitchBot(commands.Bot):
         # Set the bots message counters to the new/ reset message counters.
         self.message_counters = new_message_counters
 
-    @routines.routine(seconds=1000)
+    @routines.routine(hours=1)
     async def clear_recurrent_counters(self) -> None:
         """
         Runs hourly and clears the recurrent counters at midnight
-        dependent on channels timezone.
+        dependent on channels' timezone.
 
         Parameters
         ------------
@@ -444,10 +449,20 @@ class TwitchBot(commands.Bot):
         for channel_name in self.recurrent_counters:
 
             timezone = pytz.timezone(self.channels.cache[channel_name].timezone)
+
             now = datetime.datetime.now(timezone)
+
             seconds_since_midnight = (
                 now - now.replace(hour=0, minute=0, second=0, microsecond=0)
             ).total_seconds()
 
+            hours_mins_secs = await seconds_to_hms(seconds_since_midnight)
+
+            print(
+                f"Seconds since midnight for {channel_name}: "
+                f"{seconds_since_midnight} : "
+                f"({hours_mins_secs[0]}:{hours_mins_secs[1]}:{hours_mins_secs[2]})"
+            )
+
             if 0 <= seconds_since_midnight <= 3540:  # 3540 = 59 minutes in seconds
-                print("")
+                print("Doing the thing")

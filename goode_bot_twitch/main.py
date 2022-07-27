@@ -14,7 +14,7 @@ load_dotenv()
 
 logger = get_logger(__name__)
 
-# Create a cache for the channels.
+# Create a cache for the users.
 channels = ChannelCache()
 
 # Create the Twitch bot instance

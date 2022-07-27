@@ -22,8 +22,8 @@ class Units(commands.Cog):
         """
         Converts Celsius to Fahrenheit.
 
-        :param ctx: The command context.
-        :param celsius: Degrees Celsius to convert.
+        @param: ctx: The command context.
+        @param: celsius: Degrees Celsius to convert.
         :return: None
         """
         if not celsius:
@@ -40,8 +40,8 @@ class Units(commands.Cog):
         """
         Converts Fahrenheit to Celsius
 
-        :param ctx: The command context.
-        :param fahrenheit: Degrees Fahrenheit to convert.
+        @param: ctx: The command context.
+        @param: fahrenheit: Degrees Fahrenheit to convert.
         :return: None
         """
         if not fahrenheit:
@@ -56,8 +56,8 @@ class Units(commands.Cog):
         """
         Converts Pounds to Kilograms.
 
-        :param ctx: The command context.
-        :param pounds: Quantity of Pounds to convert.
+        @param: ctx: The command context.
+        @param: pounds: Quantity of Pounds to convert.
         :return: None
         """
         if not pounds:
@@ -72,8 +72,8 @@ class Units(commands.Cog):
         """
         Converts Kilograms to Pounds.
 
-        :param ctx: The command context.
-        :param kilos: Quantity of Kilograms to convert.
+        @param: ctx: The command context.
+        @param: kilos: Quantity of Kilograms to convert.
         :return: None
         """
         if not kilos:
@@ -88,8 +88,8 @@ class Units(commands.Cog):
         """
         Converts Feet to Metres.
 
-        :param ctx: The command context.
-        :param feet: Quantity of Feet to convert.
+        @param: ctx: The command context.
+        @param: feet: Quantity of Feet to convert.
         :return: None
         """
         if not feet:
@@ -104,8 +104,8 @@ class Units(commands.Cog):
         """
         Converts Metres to Feet
 
-        :param ctx: The command context.
-        :param metres: Quantity of Metres to convert.
+        @param: ctx: The command context.
+        @param: metres: Quantity of Metres to convert.
         :return: None
         """
         if not metres:
@@ -122,9 +122,9 @@ class Units(commands.Cog):
         """
         Converts Feet and Inches to Metres.
 
-        :param ctx: The command context.
-        :param feet: The Quantity of Feet to convert.
-        :param inches: The Quantity of Inches to convert.
+        @param: ctx: The command context.
+        @param: feet: The Quantity of Feet to convert.
+        @param: inches: The Quantity of Inches to convert.
         :return: None
         """
         if not feet:
@@ -145,8 +145,8 @@ class Units(commands.Cog):
         """
         Converts Metres to Feet-Inches.
 
-        :param ctx: The command context.
-        :param metres: The Quantity of Metres to convert.
+        @param: ctx: The command context.
+        @param: metres: The Quantity of Metres to convert.
         :return: None
         """
         if not metres:
@@ -161,8 +161,8 @@ class Units(commands.Cog):
         """
         Converts Grams to Ounces.
 
-        :param ctx: The command context.
-        :param grams: The quantity of Grams to convert.
+        @param: ctx: The command context.
+        @param: grams: The quantity of Grams to convert.
         :return: None
         """
         if not grams:
@@ -177,8 +177,8 @@ class Units(commands.Cog):
         """
         Converts Ounces to Grams.
 
-        :param ctx: The command context.
-        :param ounces: The quantity of Ounces to convert.
+        @param: ctx: The command context.
+        @param: ounces: The quantity of Ounces to convert.
         :return: None
         """
         if not ounces:
@@ -193,8 +193,8 @@ class Units(commands.Cog):
         """
         Converts Miles to Kilometres.
 
-        :param ctx: The command context.
-        :param miles: The quantity of Miles to convert.
+        @param: ctx: The command context.
+        @param: miles: The quantity of Miles to convert.
         :return: None
         """
         if not miles:
@@ -209,8 +209,8 @@ class Units(commands.Cog):
         """
         Converts Kilometres to Miles.
 
-        :param ctx: The command context.
-        :param kilometres: The quantity of Kilometres to convert.
+        @param: ctx: The command context.
+        @param: kilometres: The quantity of Kilometres to convert.
         :return: None
         """
         if not kilometres:
@@ -227,8 +227,8 @@ class Units(commands.Cog):
         """
         Converts Ounce Troy to Grams.
 
-        :param ctx: The command context.
-        :param ounce_troy: Quantity of Ounce Troy to convert.
+        @param: ctx: The command context.
+        @param: ounce_troy: Quantity of Ounce Troy to convert.
         :return: None
         """
         if not ounce_troy:
@@ -243,8 +243,8 @@ class Units(commands.Cog):
         """
         Converts Grams to Ounce Troy.
 
-        :param ctx: The command context.
-        :param grams: Quantity of Grams to convert.
+        @param: ctx: The command context.
+        @param: grams: Quantity of Grams to convert.
         :return: None
         """
         if not grams:
@@ -261,8 +261,8 @@ class Units(commands.Cog):
         """
         Converts Ounce Troy to Ounces.
 
-        :param ctx: The command context.
-        :param ounce_troy: Quantity of Ounce Troy to convert to ounces.
+        @param: ctx: The command context.
+        @param: ounce_troy: Quantity of Ounce Troy to convert to ounces.
         :return: None
         """
         if not ounce_troy:
@@ -277,8 +277,8 @@ class Units(commands.Cog):
         """
         Converts Ounces to Ounce Troy.
 
-        :param ctx: The command context.
-        :param ounces: Quantity of Ounces to convert
+        @param: ctx: The command context.
+        @param: ounces: Quantity of Ounces to convert
         :return: None
         """
         if not ounces:
@@ -293,7 +293,7 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
-    :param bot: The commands' bot instance.
+    @param: bot: The commands' bot instance.
     :return: None
     """
     bot.add_cog(Units(bot))

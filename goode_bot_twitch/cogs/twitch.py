@@ -23,8 +23,8 @@ class Twitch(commands.Cog):
     async def averagefps(self, ctx: commands.Context, channel_name: str = None):
         """
 
-        :param ctx: The command context
-        :param channel_name: The name of the channel to check
+        @param: ctx: The command context
+        @param: channel_name: The name of the channel to check
         :return: None
         """
 
@@ -38,7 +38,7 @@ class Twitch(commands.Cog):
         print(url)
 
         headers = {
-            "Authorization": "Bearer oauth:1510f8y1n2wk4enq1b5rwd7w825ii3",  # This is a fake token
+            "Authorization": "Bearer oauth:1510f8y1n2wk4enq1b5rwd7w825gfd",  # This is a fake token
             "Client-Id": os.environ.get("CLIENT_ID"),
         }
 
@@ -57,7 +57,7 @@ class Twitch(commands.Cog):
         """
         Sends how long a person has been following the channel.
 
-        :param ctx: The command context
+        @param: ctx: The command context
         :return: None
         """
 
@@ -87,7 +87,7 @@ class Twitch(commands.Cog):
         """
         Sends the current follower count to Twitch
 
-        :param ctx: The command context
+        @param: ctx: The command context
         :return: None
         """
 
@@ -107,8 +107,8 @@ class Twitch(commands.Cog):
         """
         Sends a shoutout for a channel/user
 
-        :param ctx: The command context
-        :param channel: The Streamer/Channel to shoutout.
+        @param: ctx: The command context
+        @param: channel: The Streamer/Channel to shoutout.
         :return: None
         """
 
@@ -121,7 +121,7 @@ class Twitch(commands.Cog):
         """
         Sends the current stream title to Twitch
 
-        :param ctx: The command context
+        @param: ctx: The command context
         :return: None
         """
         streamer = await ctx.channel.user()
@@ -137,7 +137,7 @@ class Twitch(commands.Cog):
         """
         Sends the uptime of the Twitch stream.
 
-        :param ctx: The command context
+        @param: ctx: The command context
         :return: None
         """
 
@@ -156,7 +156,7 @@ class Twitch(commands.Cog):
     async def viewers(self, ctx: commands.Context) -> None:
         """
         Sends the current view count for the stream
-        :param ctx: The command context
+        @param: ctx: The command context
         :return: None
         """
         streamer = await ctx.channel.user()
@@ -175,7 +175,7 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
-    :param bot: The commands' bot instance.
+    @param: bot: The commands' bot instance.
     :return: None
     """
     bot.add_cog(Twitch(bot))

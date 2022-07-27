@@ -18,8 +18,8 @@ class Search(commands.Cog):
         """
         Generates a Google search link.
 
-        :param ctx:
-        :param search: The search term.
+        @param: ctx:
+        @param: search: The search term.
         :return: None
         """
         await ctx.send("https://google.com/search?q=" + "+".join(search))
@@ -29,8 +29,8 @@ class Search(commands.Cog):
         """
         Generates a Google 'im feeling lucky' search link.
 
-        :param ctx:
-        :param search: The search term.
+        @param: ctx:
+        @param: search: The search term.
         :return: None
         """
         await ctx.send("https://google.com/search?btnI&q=" + "+".join(search))
@@ -40,8 +40,8 @@ class Search(commands.Cog):
         """
         Generates a lmgtfy link.
 
-        :param ctx:
-        :param search: The search term.
+        @param: ctx:
+        @param: search: The search term.
         :return: None
         """
         await ctx.send("https://lmgtfy.com/?q=" + "+".join(search))
@@ -51,8 +51,8 @@ class Search(commands.Cog):
         """
         Generates a wikipedia link.
 
-        :param ctx:
-        :param search: The search term.
+        @param: ctx:
+        @param: search: The search term.
         :return: None
         """
         await ctx.send("https://wikipedia.org/wiki/" + "_".join(search))
@@ -62,7 +62,7 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
-    :param bot: The commands' bot instance.
+    @param: bot: The commands' bot instance.
     :return: None
     """
     bot.add_cog(Search(bot))

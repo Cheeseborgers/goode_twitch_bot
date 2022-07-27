@@ -19,9 +19,9 @@ class Math(commands.Cog):
 
         Parameters
         ------------
-        :param ctx: commands.Context
-        :param left: The first number to add.
-        :param right: The second number to add.
+        @param: ctx: commands.Context
+        @param: left: The first number to add.
+        @param: right: The second number to add.
         :return: None
         """
         await ctx.send(left + right)
@@ -33,7 +33,7 @@ class Math(commands.Cog):
 
         Parameters
         ------------
-        :param ctx: commands.Context
+        @param: ctx: commands.Context
         :return: None
         """
         if ctx.message.author.is_mod:
@@ -57,7 +57,7 @@ def prepare(bot: commands.Bot) -> None:
 
     Parameters
     ------------
-    :param bot: The commands' bot instance.
+    @param: bot: The commands' bot instance.
     :return: None
     """
     bot.add_cog(Math(bot))

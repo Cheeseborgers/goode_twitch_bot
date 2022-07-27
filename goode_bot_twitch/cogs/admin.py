@@ -16,12 +16,12 @@ class AdminCommandsCog(commands.Cog):
 
     async def cog_check(self, ctx: commands.Context) -> bool:
         """
-        A Cog wide check to determine if the context author is the bot owner_channel_name
-        before running any commands.
+        A Cog wide check to determine if the context author name is the
+        same as the bot owner_channel_name before running any commands.
 
         Parameters
         ------------
-        :param ctx: commands.Context
+        @param: ctx: commands.Context
         :return: bool: Whether the author is the bot owner_channel_name or not.
         """
         return await author_is_owner(ctx)
@@ -29,12 +29,12 @@ class AdminCommandsCog(commands.Cog):
     @commands.command(name="_join", aliases=("join",))
     async def _join(self, ctx: commands.Context, channel_name: str) -> None:
         """
-        Joins a channel/ stream by channel name.
+        Joins a model/ stream by channel name.
 
         Parameters
         ------------
-        :param ctx: commands.Context
-        :param channel_name: The name of the channel to join.
+        @param: ctx: commands.Context
+        @param: channel_name: The name of the channel to join.
         :return: None
         """
         await ctx.send(f"'{channel_name}' joined")
@@ -42,12 +42,12 @@ class AdminCommandsCog(commands.Cog):
     @commands.command(name="_leave", aliases=("leave",))
     async def _leave(self, ctx: commands.Context, channel_name: str) -> None:
         """
-        Leaves a channel/ stream by channel name.
+        Leaves a model/ stream by channel name.
 
         Parameters
         ------------
-        :param ctx: commands.Context
-        :param channel_name: The name of the channel to leave.
+        @param: ctx: commands.Context
+        @param: channel_name: The name of the channel to leave.
         :return: None
         """
         await ctx.send(f"'{channel_name}' left")
@@ -59,8 +59,8 @@ class AdminCommandsCog(commands.Cog):
 
         Parameters
         ------------
-        :param ctx: commands.Context
-        :param module: The name of the module to unload in dot.path format.
+        @param: ctx: commands.Context
+        @param: module: The name of the module to unload in dot.path format.
         :return: None
         """
         try:
@@ -78,8 +78,8 @@ class AdminCommandsCog(commands.Cog):
 
         Parameters
         ------------
-        :param ctx: commands.Context
-        :param module: The name of the module to unload in dot.path format.
+        @param: ctx: commands.Context
+        @param: module: The name of the module to unload in dot.path format.
         :return: None
         """
         try:
@@ -100,8 +100,8 @@ class AdminCommandsCog(commands.Cog):
 
         Parameters
         ------------
-        :param ctx: commands.Context
-        :param module: The name of the module to unload in dot.path format.
+        @param: ctx: commands.Context
+        @param: module: The name of the module to unload in dot.path format.
         :return: None
         """
         try:
@@ -129,7 +129,7 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
-    :param bot: The commands' bot instance.
+    @param: bot: The commands' bot instance.
     :return: None
     """
     bot.add_cog(AdminCommandsCog(bot))

@@ -24,7 +24,7 @@ class Words(commands.Cog):
 
         See https://www.wordnik.com/users/goode/API
 
-        :param ctx:
+        @param: ctx:
         :return:
         """
 
@@ -51,8 +51,8 @@ class Words(commands.Cog):
     async def urbandictionary(self, ctx: commands.Context, word):
         """
 
-        :param ctx:
-        :param word:
+        @param: ctx:
+        @param: word:
         :return:
         """
         url = "http://api.urbandictionary.com/v0/define"
@@ -77,7 +77,7 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
-    :param bot: The commands' bot instance.
+    @param: bot: The commands' bot instance.
     :return: None
     """
     bot.add_cog(Words(bot))

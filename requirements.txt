@@ -4,3 +4,10 @@ aiohttp~=3.8.1
 python-dotenv~=0.20.0
 databases~=0.6.0
 orm~=0.3.1
+
+pytz~=2022.1
+quart~=0.17.0
+sqlalchemy~=1.4.39
+uuid~=1.30
+aiofiles~=0.8.0
+werkzeug~=2.1.2

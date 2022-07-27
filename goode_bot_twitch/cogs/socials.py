@@ -17,7 +17,7 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
-    :param bot: The commands' bot instance
+    @param: bot: The commands' bot instance
     :return: None
     """
 

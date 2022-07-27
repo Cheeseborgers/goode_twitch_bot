@@ -17,7 +17,7 @@ from goode_bot_twitch.checks import (
 def is_owner(func):
     """
 
-    :param func:
+    @param: func:
     :return:
     """
 
@@ -33,7 +33,7 @@ def is_owner(func):
 def is_mod(func):
     """
 
-    :param func:
+    @param: func:
     :return:
     """
 
@@ -49,7 +49,7 @@ def is_mod(func):
 def is_sub(func):
     """
 
-    :param func:
+    @param: func:
     :return:
     """
 
@@ -65,7 +65,7 @@ def is_sub(func):
 def is_in_channels(channels: Union[list, tuple]):
     """
 
-    :param channels:
+    @param: channels:
     :return:
     """
 

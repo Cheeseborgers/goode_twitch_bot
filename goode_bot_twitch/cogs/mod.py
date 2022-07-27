@@ -20,8 +20,8 @@ class ModCommandsCog(commands.Cog):
         A Cog wide check to determine if the context author is a channel moderator
         before running any commands.
 
-        :param ctx: commands.Context
-        :return: bool: Whether the author is a channel moderator or not.
+        @param: ctx: commands.Context
+        :return: bool: Whether the author is a model moderator or not.
         """
         return await author_is_mod(ctx)
 
@@ -68,8 +68,8 @@ class ModCommandsCog(commands.Cog):
     async def _getid(self, ctx, username: str = None):
         """
 
-        :param ctx: commands.Context
-        :param username:
+        @param: ctx: commands.Context
+        @param: username:
         :return:
         """
 
@@ -93,7 +93,7 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
-    :param bot: The commands' bot instance
+    @param: bot: The commands' bot instance
     :return: None
     """
 

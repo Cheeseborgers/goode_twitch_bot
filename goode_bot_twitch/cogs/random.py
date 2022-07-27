@@ -19,8 +19,8 @@ class RandomCommandsCog(commands.Cog):
         """
         Rolls a die in NdN format.
 
-        :param ctx:
-        :param dice: str: NdN format dice string
+        @param: ctx:
+        @param: dice: str: NdN format dice string
         """
 
         if not dice:
@@ -42,8 +42,8 @@ class RandomCommandsCog(commands.Cog):
         """
         Returns the peepee length for a user.
 
-        :param ctx: The message context
-        :param username: (optional) The user to include
+        @param: ctx: The message context
+        @param: username: (optional) The user to include
         :return:
         """
 
@@ -65,7 +65,7 @@ class RandomCommandsCog(commands.Cog):
         """
         Generates a random hex color
 
-        :param ctx: The message context
+        @param: ctx: The message context
         :return:
         """
 
@@ -77,9 +77,9 @@ class RandomCommandsCog(commands.Cog):
         """
         Generates a random number within the given range
 
-        :param arg2:
-        :param arg1:
-        :param ctx: The message context
+        @param: arg2:
+        @param: arg1:
+        @param: ctx: The message context
         :return:
         """
 
@@ -100,7 +100,7 @@ class RandomCommandsCog(commands.Cog):
     async def _8ball(self, ctx):
         """
         Returns a random 8ball answer.
-        :param ctx:
+        @param: ctx:
         :return:
         """
         responses = [
@@ -131,7 +131,7 @@ class RandomCommandsCog(commands.Cog):
     async def _coin(self, ctx):
         """
 
-        :param ctx:
+        @param: ctx:
         :return:
         """
         await ctx.channel.send(
@@ -143,7 +143,7 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
-    :param bot: The commands' bot instance
+    @param: bot: The commands' bot instance
     :return: None
     """
 
@@ -162,7 +162,7 @@ def get_peepee_size(user_id: int) -> str:
     """
     Returns a string of the users peepee size.
 
-    :param user_id:
+    @param: user_id:
     :return: str: The returned string eg: '6cm 🍌'
     """
     length = user_id % 30

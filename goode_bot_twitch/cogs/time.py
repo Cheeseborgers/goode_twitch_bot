@@ -62,7 +62,7 @@ class Time(commands.Cog):
     @commands.command(name="_time", aliases=("time",))
     async def _time(self, ctx):
         """
-        Returns the current time for the streamer/ model
+        Returns the current time for the streamer/ channel
 
         """
 

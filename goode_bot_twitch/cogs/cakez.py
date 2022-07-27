@@ -23,7 +23,7 @@ class Cakez(commands.Cog):
 
         Parameters
         ------------
-        :param ctx: commands.Context
+        @param: ctx: commands.Context
         :return: None
         """
         if await author_is_in_channels(ctx, ["cakez77", "goode_cheeseburgers"]):
@@ -75,7 +75,7 @@ def prepare(bot: commands.Bot) -> None:
 
     Parameters
     ------------
-    :param bot: The commands' bot instance.
+    @param: bot: The commands' bot instance.
     :return: None
     """
     cog = Cakez(bot)

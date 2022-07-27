@@ -20,7 +20,7 @@ def prepare(bot: commands.Bot) -> None:
 
     Parameters
     ------------
-    :param bot: The commands' bot instance.
+    @param: bot: The commands' bot instance.
     :return: None
     """
     bot.add_cog(Location(bot))

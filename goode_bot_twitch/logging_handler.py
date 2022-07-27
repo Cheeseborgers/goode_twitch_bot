@@ -41,15 +41,19 @@ def get_logger(name):
     """
     Returns the instance of the logger.
 
-    :param name: The app name given to the logger
+    @param: name: The app name given to the logger
     :return: The logger instance
     """
+
     file_formatter = logging.Formatter(os.environ.get("FILE_LOG_FORMAT"))
     console_formatter = ColoredFormatter(os.environ.get("CONSOLE_LOG_FORMAT"))
 
     # File handler - https://docs.python.org/3/howto/logging.html -------------
+    # DEBUG: Detailed information, typically of interest only when
+    # diagnosing problems.
+
     file_handler = logging.handlers.RotatingFileHandler(
-        filename=os.environ.get("MAIN_LOG_FILENAME"),
+        filename=os.environ.get("TWITCH_BOT_LOG_FILENAME"),
         encoding="utf-8",
         maxBytes=32 * 1024 * 1024,  # 32 MiB
         backupCount=5,  # Rotate through 5 files
