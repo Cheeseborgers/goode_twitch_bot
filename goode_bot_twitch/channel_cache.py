@@ -20,26 +20,26 @@ class ChannelCache:
 
     async def load_cache(self) -> None:
         """
-        Loads the channels into the channel cache.
+        Loads the users into the model cache.
 
         Parameters
         ----------
         :return: None
 
-        :raise OwnerNotFound: Raised if owners channel now found in the cache.
-        :raise ChannelNotFound: Raised if no channels are found in the cache.
+        :raise OwnerNotFound: Raised if owners model now found in the cache.
+        :raise ChannelNotFound: Raised if no users are found in the cache.
         """
 
-        # Fetch the channels from the database.
+        # Fetch the users from the database.
         channels = await get_channels()
 
-        # Load the channels into the channels cache.
+        # Load the users into the users cache.
         self._cache = {channel.name: channel for channel in channels}
 
-        # Check the channel cache has items in it.
+        # Check the model cache has items in it.
         if self._cache:
 
-            # Check that the owners channel is present in the cache / database
+            # Check that the owners model is present in the cache / database
             if self._cache.get(os.environ.get("OWNER_CHANNEL_NAME")):
                 return
 
@@ -49,7 +49,7 @@ class ChannelCache:
 
     async def update(self, channel_name: str, channel: TwitchChannel):
         """
-        Updates a Channel in the channel cache, Adds a new one if it does not exist.
+        Updates a Channel in the model cache, Adds a new one if it does not exist.
 
         :return: None
         """
@@ -57,7 +57,7 @@ class ChannelCache:
 
     async def remove(self, channel_name: str) -> None:
         """
-        Removes a channel from the cache if exists.
+        Removes a model from the cache if exists.
 
         :return: None
         """

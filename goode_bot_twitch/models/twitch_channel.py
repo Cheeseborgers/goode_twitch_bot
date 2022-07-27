@@ -1,17 +1,24 @@
 """
 Created 26/7/2022 by goode_cheeseburgers.
 """
+import datetime
+import os
 import typing
 
-from sqlalchemy import String, Column, Boolean, DateTime, func, select, delete
+from sqlalchemy import String, Column, Boolean, DateTime, func
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.engine import ScalarResult
-from sqlalchemy.exc import IntegrityError, NoResultFound, InvalidRequestError
 
-from goode_bot_twitch.database import async_session
 from goode_bot_twitch.logging_handler import get_logger
 from goode_bot_twitch.models.abstract_base import AbstractBase
-from goode_bot_twitch.models.errors import ModelNotFound, ModelAlreadyExists
+from goode_bot_twitch.models.base_model_functions import (
+    add_model,
+    add_models,
+    delete_model,
+    delete_models,
+    get_model,
+    get_models,
+)
 
 logger = get_logger(__name__)
 
@@ -22,9 +29,9 @@ class TwitchChannel(AbstractBase):
 
     """
 
+    # pylint: disable=too-many-instance-attributes
     __tablename__ = "twitch_channels"
 
-    name = Column(String(36), nullable=False, unique=True)
     prefix = Column(String(3))
     cmds_enabled = Column(Boolean, nullable=False)
     auto_join = Column(Boolean, nullable=False)
@@ -37,40 +44,35 @@ class TwitchChannel(AbstractBase):
     next_check = Column(DateTime, server_default=func.now())
 
     def __repr__(self):
-        return self._repr(
-            id=self.id,
-            created_at=self.created_at,
-            updated_at=self.updated_at,
-            name=self.name,
-            prefix=self.prefix,
-            cmds_enabled=self.cmds_enabled,
-            auto_join=self.auto_join,
-            auto_thank=self.auto_thank,
-            thanks_emotes=self.thanks_emotes,
-            subgift_thanks_start_emote=self.subgift_thanks_start_emote,
-            subgift_thanks_end_emote=self.subgift_thanks_end_emote,
-            timezone=self.timezone,
-            live=self.live,
-            next_check=self.next_check,
-        )
+        return self._repr()
 
     def __str__(self):
-        return self._str(
-            id=self.id,
-            created_at=self.created_at,
-            updated_at=self.updated_at,
-            name=self.name,
-            prefix=self.prefix,
-            cmds_enabled=self.cmds_enabled,
-            auto_join=self.auto_join,
-            auto_thank=self.auto_thank,
-            thanks_emotes=self.thanks_emotes,
-            subgift_thanks_start_emote=self.subgift_thanks_start_emote,
-            subgift_thanks_end_emote=self.subgift_thanks_end_emote,
-            timezone=self.timezone,
-            live=self.live,
-            next_check=self.next_check,
-        )
+        return self._str()
+
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        name,
+        prefix,
+        cmds_enabled=False,
+        auto_join=False,
+        auto_thank=False,
+        thanks_emotes=None,
+        subgift_thanks_start_emote=None,
+        subgift_thanks_end_emote=None,
+        timezone=None,
+    ):
+        self.name = name
+        self.prefix = prefix
+        self.cmds_enabled = cmds_enabled
+        self.auto_join = auto_join
+        self.auto_thank = auto_thank
+        self.thanks_emotes = thanks_emotes or list(str)
+        self.subgift_thanks_start_emote = subgift_thanks_start_emote or ""
+        self.subgift_thanks_end_emote = subgift_thanks_end_emote or ""
+        self.timezone = timezone or os.environ.get("OWNER_TIME_ZONE")
+        self.live = False
+        self.next_check = datetime.datetime.now()
 
 
 async def add_channel(channel: TwitchChannel) -> None:
@@ -79,19 +81,10 @@ async def add_channel(channel: TwitchChannel) -> None:
 
     Parameters
     ------------
-    :param: channel: A TwitchChannel to add to the database
+    @param: model: A TwitchChannel to add to the database
     :return: None
-
-    :raise: ModelAlreadyExists: Raised if the channel already exists in the database.
     """
-    try:
-        async with async_session() as session:
-            async with session.begin():
-                session.add(channel)
-                await session.commit()
-
-    except IntegrityError as exc:
-        raise ModelAlreadyExists(channel) from exc
+    await add_model(channel)
 
 
 async def add_channels(channels: typing.Union[list, tuple]) -> None:
@@ -100,22 +93,10 @@ async def add_channels(channels: typing.Union[list, tuple]) -> None:
 
     Parameters
     ------------
-    :param: channels: A list or tuple of TwitchChannels to add to the database
+    @param: users: A list or tuple of TwitchChannels to add to the database
     :return: None
-
-    :raise: ModelAlreadyExists: Raised if the channel already exists in the database.
     """
-    try:
-        async with async_session() as session:
-            async with session.begin():
-
-                for channel in channels:
-                    session.add(channel)
-
-                await session.commit()
-
-    except IntegrityError as exc:
-        raise ModelAlreadyExists(channel) from exc
+    await add_models(channels)
 
 
 async def delete_channel(channel: TwitchChannel) -> None:
@@ -124,29 +105,10 @@ async def delete_channel(channel: TwitchChannel) -> None:
 
     Parameters
     ------------
-    :param: channel: A TwitchChannel to delete from the database
+    @param: model: A TwitchChannel to delete from the database
     :return: None
-
-    :raise: ModelNotFound: Raised when the channel is not found in the database.
     """
-    try:
-        async with async_session() as session:
-            async with session.begin():
-
-                statement = (
-                    delete(TwitchChannel)
-                    .where(TwitchChannel.name == channel.name)
-                    .execution_options(synchronize_session="fetch")
-                )
-
-                await session.execute(statement)
-
-                await session.commit()
-
-    except IntegrityError as exc:
-        raise ModelNotFound(channel) from exc
-    except InvalidRequestError as exc:
-        raise ModelNotFound(channel) from exc
+    await delete_model(channel)
 
 
 async def delete_channels(channels: typing.Union[list, tuple]) -> None:
@@ -155,31 +117,10 @@ async def delete_channels(channels: typing.Union[list, tuple]) -> None:
 
     Parameters
     ------------
-    :param: channels: A list or tuple of TwitchChannels to delete from the database
+    @param: users: A list or tuple of TwitchChannels to delete from the database
     :return: None
-
-    :raise: ModelNotFound: Raised when the channel is not found in the database.
     """
-    try:
-        async with async_session() as session:
-            async with session.begin():
-
-                for channel in channels:
-
-                    statement = (
-                        delete(TwitchChannel)
-                        .where(TwitchChannel.name == channel.name)
-                        .execution_options(synchronize_session="fetch")
-                    )
-
-                    await session.execute(statement)
-
-                await session.commit()
-
-    except IntegrityError as exc:
-        raise ModelNotFound(channel) from exc
-    except InvalidRequestError as exc:
-        raise ModelNotFound(channel) from exc
+    await delete_models(channels)
 
 
 async def get_channel(channel: TwitchChannel) -> TwitchChannel:
@@ -188,25 +129,10 @@ async def get_channel(channel: TwitchChannel) -> TwitchChannel:
 
     Parameters
     ------------
-    :param: channel: A TwitchChannel to fetch from the database.
-    :return: TwitchChannel: The Twitch channel object returned from database.
-
-    :raise: ModelNotFound: Raised when the channel is not found in the database.
+    @param: model: A TwitchChannel to fetch from the database.
+    :return: TwitchChannel: The Twitch model object returned from database.
     """
-    try:
-        async with async_session() as session:
-            async with session.begin():
-                # query from a class
-                statement = select(TwitchChannel).filter_by(name=channel.name)
-
-                # list of first element of each row (i.e. User objects)
-                cursor = await session.execute(statement)
-
-                # Return the TwitchChannel if found, raise if not.
-                return cursor.scalars().one()
-
-    except NoResultFound as exc:
-        raise ModelNotFound(channel) from exc
+    return await get_model(channel)
 
 
 async def get_channels() -> ScalarResult:
@@ -217,11 +143,4 @@ async def get_channels() -> ScalarResult:
     ----------
     :return: ScalarResult: The TwitchChannels
     """
-
-    async with async_session() as session:
-        async with session.begin():
-            query = select(TwitchChannel)
-
-            result = await session.execute(query)
-
-            return result.scalars()
+    return await get_models(TwitchChannel)

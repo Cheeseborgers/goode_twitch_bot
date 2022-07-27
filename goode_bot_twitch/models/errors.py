@@ -45,3 +45,26 @@ class ModelAlreadyExists(ModelException):
 
     def __str__(self):
         return f"{self.model.name} -> {self.message}"
+
+
+class BaseModelUsedInCall(ModelException):
+    """
+    Raised when the abstract base model is called instead of the child model.
+
+    Attributes
+    ----------
+    model -- input model which caused the error
+    message -- explanation of the error
+    """
+
+    def __init__(
+        self,
+        model,
+        message="Abstract base model was called instead of the child model.",
+    ):
+        self.model = model
+        self.message = message
+        super().__init__(self.message)
+
+    def __str__(self):
+        return f"{self.model.name} -> {self.message}"
