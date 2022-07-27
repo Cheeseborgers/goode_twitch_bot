@@ -1,7 +1,7 @@
 """
 Created 8/7/2022 by goode_cheeseburgers.
 """
-from random import randint, choice
+from random import randint, choices, choice
 
 import twitchio
 
@@ -10,8 +10,8 @@ def get_author_prefix(self, message: twitchio.Message) -> str:
     """
     Returns the Twitch user prefix as a string.
 
-    :param self:
-    :param message: The Twitch message.
+    @param: self:
+    @param: message: The Twitch message.
     :return: str: The message authors prefix (ie: [Subscriber])
     """
     user_prefix = ""
@@ -32,7 +32,7 @@ def get_sub_tier(data) -> int:
     """
     Returns the Twitch Sub tier.
 
-    :param data:
+    @param: data:
     :return: int: The Twitch sub tier level.
     """
     if data == 2000:
@@ -47,19 +47,20 @@ def generate_emotes(emote_list) -> str:
     """
     Generates a string of random emotes from a given list.
 
-    :param emote_list:
+    @param: emote_list:
     :return: str:  A string of random channel emotes
     """
-    return " ".join([choice(emote_list) for _ in range(randint(10, 20))])
+
+    return " ".join(choices(emote_list, k=randint(10, 20)))
 
 
 async def create_thank_you_message(bot, channel_name: str, tags: dict) -> str:
     """
     Creates a thankyou message for subs and gift subs.
 
-    :param bot:
-    :param channel_name:
-    :param tags:
+    @param: bot:
+    @param: channel_name:
+    @param: tags:
     :return:
     """
 
@@ -96,7 +97,16 @@ async def create_thank_you_message(bot, channel_name: str, tags: dict) -> str:
         bot.logger.debug(
             "[%s] - Subscriber: %s", tags["msg-id"].capitalize(), tags["display-name"]
         )
-
         thank_you_msg = generate_emotes(bot.channels.cache[channel_name].thanks_emotes)
+
+        if int(tags["msg-param-cumulative-months"]) > 80:
+
+            over_sub_month_threshold_msgs = ["do you have any idea how long that is?"]
+
+            thank_you_msg = (
+                f"{thank_you_msg} GG {tags['display-name']}, "
+                f"{tags['msg-param-cumulative-months']}, "
+                f"{choice(over_sub_month_threshold_msgs)}"
+            )
 
         return thank_you_msg
