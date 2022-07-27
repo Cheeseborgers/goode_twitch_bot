@@ -62,7 +62,7 @@ class Time(commands.Cog):
     @commands.command(name="_time", aliases=("time",))
     async def _time(self, ctx):
         """
-        Returns the current time for the streamer/ channel
+        Returns the current time for the streamer/ model
 
         """
 
@@ -79,7 +79,7 @@ def prepare(bot: commands.Bot) -> None:
     """
     Module is being loaded, prepare anything you need then add the cog.
 
-    :param bot: The commands' bot instance.
+    @param: bot: The commands' bot instance.
     :return: None
     """
     bot.add_cog(Time(bot))
